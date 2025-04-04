@@ -1,13 +1,20 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
+import { Image, StyleSheet, Platform,Text, View,Button } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
+import  TimerControl  from '@/components/TimerControl';
 export default function HomeScreen() {
+
   return (
-    <ParallaxScrollView
+    <View className="flex-1 justify-center items-center space-y-4">
+      <TimerControl/>
+    </View>
+  );
+}
+
+/*<ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
@@ -15,6 +22,11 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
+        <View className="flex-1 justify-center items-center">
+
+        <Text className="text-5xl text-blue-500">Helloww</Text>
+        </View>
+
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
@@ -50,10 +62,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
-    </ParallaxScrollView>
-  );
-}
-
+    </ParallaxScrollView>*/
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
