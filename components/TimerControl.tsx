@@ -9,9 +9,10 @@ import { ThemedView } from '@/components/ThemedView';
 
 
 export default function TimerControl() {
+  
   const styles = `bg-blue-500 text-white`;
   const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -42,28 +43,47 @@ export default function TimerControl() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center space-y-4 bg-slate-200">
-      <Text className="text-5xl text-blue-500">Helloww</Text>
-      <Text className="text-3xl text-blue-500">Timer: {formatTime(seconds)}</Text>
+    <View className="justify-center items-center space-y-3">
 
+
+
+      <View style={{
+    borderWidth: 2,
+    borderColor: 'green',
+    borderRadius: 10,
+    padding: 10,
+    overflow: 'hidden',
+   
+    
+  }}>
+        
+        <Text className="text-3xl text-blue-500">{formatTime(seconds)}</Text>
       <TouchableOpacity
         
         onPress={() => setIsRunning(prev => !prev)}
       >
       
-      <Text className="text-5xl text-blue-500">{isRunning ? 'Pause' : 'Continue'}</Text>
+      <Text className="text-3xl text-blue-500">{isRunning ? 'Pause' : 'Play'}</Text>
       </TouchableOpacity>
-
-
-
-        <TouchableOpacity className="w-[30]%"
-        onPress={handleReset}>
-          <Text className="text-5xl text-blue-500">Stop</Text>
-        </TouchableOpacity>
+      </View>
 
 
 
 
     </View>
   );
+
+
+  
 }
+
+/*
+        <TouchableOpacity className="w-[30]%"
+        onPress={handleReset}>
+          <Text className="text-3xl text-blue-500">Stop</Text>
+        </TouchableOpacity>
+
+
+
+
+*/

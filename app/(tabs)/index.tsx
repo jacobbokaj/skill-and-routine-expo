@@ -6,9 +6,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import  TimerControl  from '@/components/TimerControl';
 export default function HomeScreen() {
-
+  const currentDate = new Date();
   return (
     <View className="flex-1 justify-center items-center space-y-4">
+      <Text className="text-3xl text-blue-500"> Skill routine</Text>
+      <Text className="text-3xl text-blue-500">Datee: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
       <TimerControl/>
     </View>
   );
