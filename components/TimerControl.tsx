@@ -43,28 +43,35 @@ export default function TimerControl() {
   };
 
   return (
-    <View className="justify-center items-center space-y-3">
+    <View>
 
 
 
       <View style={{
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: 'green',
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 15,
+    padding: 30,
     overflow: 'hidden',
    
     
   }}>
         
         <Text className="text-3xl text-blue-500">{formatTime(seconds)}</Text>
-      <TouchableOpacity
-        
+      <TouchableOpacity      
         onPress={() => setIsRunning(prev => !prev)}
-      >
-      
-      <Text className="text-3xl text-blue-500">{isRunning ? 'Pause' : 'Play'}</Text>
+      >   
+        <Text className="text-3xl text-blue-500">{isRunning ? 'Pause' : 'Play'}</Text>     
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={()=> handleReset()}
+      >
+          <Text className="text-3xl text-blue-500">Reset day</Text>
+      </TouchableOpacity>
+
+
+
       </View>
 
 

@@ -8,10 +8,15 @@ import  TimerControl  from '@/components/TimerControl';
 export default function HomeScreen() {
   const currentDate = new Date();
   return (
-    <View className="flex-1 justify-center items-center space-y-4">
-      <Text className="text-3xl text-blue-500"> Skill routine</Text>
-      <Text className="text-3xl text-blue-500">Datee: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
+    <View>
+
+      <View className="mt-20">
+        <Text className="text-3xl text-blue-500 text-center px-5"> Skill routine</Text>
+        <Text className="text-3xl text-blue-500 text-center">Date: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
+      </View>
+    <View className=" justify-center items-center space-y-4 mt-40">
       <TimerControl/>
+    </View>
     </View>
   );
 }
