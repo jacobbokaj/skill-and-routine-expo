@@ -29,15 +29,13 @@ import React, { useState } from 'react';
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Select item"
+        placeholder="Select skill"
         searchPlaceholder="Search..."
         value={value}
         onChange={item => {
           setValue(item.value);
         }}
-        renderLeftIcon={() => (
-          <AntDesign style={styles.icon} color="black" name="Safety" size={50} />
-        )}
+        
       />
     );
   };
@@ -50,7 +48,7 @@ import React, { useState } from 'react';
       height: 50,
       borderBottomColor: 'gray',
       borderBottomWidth: 0.5,
-      width: 150
+      width: 300
     },
     icon: {
       marginRight: 5,
@@ -59,7 +57,7 @@ import React, { useState } from 'react';
       fontSize: 16,
     },
     selectedTextStyle: {
-      fontSize: 16,
+      fontSize: 20,
     },
     iconStyle: {
       width: 20,
@@ -67,6 +65,6 @@ import React, { useState } from 'react';
     },
     inputSearchStyle: {
       height: 40,
-      fontSize: 16,
+      fontSize: 10,
     },
   });

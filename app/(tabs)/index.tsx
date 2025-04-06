@@ -9,7 +9,7 @@ import SkillChosen from '@/components/SkillChosen';
 export default function HomeScreen() {
   const currentDate = new Date();
   return (
-    <View>
+    <View className="bg-slate-600">
 
       <View className="mt-20">
         <Text className="text-3xl text-blue-500 text-center px-5"> Motivation app</Text>
