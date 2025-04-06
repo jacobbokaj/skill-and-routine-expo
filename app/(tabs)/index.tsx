@@ -12,7 +12,7 @@ export default function HomeScreen() {
     <View>
 
       <View className="mt-20">
-        <Text className="text-3xl text-blue-500 text-center px-5"> Skill routine</Text>
+        <Text className="text-3xl text-blue-500 text-center px-5"> Motivation app</Text>
         <Text className="text-3xl text-blue-500 text-center">Date: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
       </View>
       <View className="justify-center items-center space-y-4 mt-10 bg-slate-600">
