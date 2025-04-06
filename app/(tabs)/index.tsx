@@ -5,6 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import  TimerControl  from '@/components/TimerControl';
+import SkillChosen from '@/components/SkillChosen';
 export default function HomeScreen() {
   const currentDate = new Date();
   return (
@@ -13,6 +14,11 @@ export default function HomeScreen() {
       <View className="mt-20">
         <Text className="text-3xl text-blue-500 text-center px-5"> Skill routine</Text>
         <Text className="text-3xl text-blue-500 text-center">Date: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
+      </View>
+      <View className="justify-center items-center space-y-4 mt-10 bg-slate-600">
+
+        <SkillChosen/>
+
       </View>
     <View className=" justify-center items-center space-y-4 mt-40">
       <TimerControl/>
