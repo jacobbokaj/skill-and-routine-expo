@@ -15,7 +15,7 @@ function GetDatauseEffect(){}
 
 
 
-export default function TabTwoScreen() {
+export default function Profile() {
   
  const [data, setData] = useState(null);
   useEffect(() => {

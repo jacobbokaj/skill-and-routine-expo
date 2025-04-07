@@ -4,16 +4,40 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { getItem, setItem } from '@/app/utils/AsyncStorage';
+
+interface Props{
+  timerCount: boolean;
+}
 
 
-
-
-export default function TimerControl() {
+export default function TimerControl({timerCount} : Props) {
   
   const styles = `bg-blue-500 text-white`;
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+
+  function doRun(isRun: boolean){
+    setIsRunning(isRun);
+    async () => {
+          const result = await setItem('timer', seconds);
+         // const data = await result;
+    
+    }
+  }
+
+
+  useEffect(()=> {
+    if(timerCount == false){
+      setIsRunning(false);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+  },[timerCount]);
+
+  
+
 
   useEffect(() => {
     if (isRunning && !intervalRef.current) {
