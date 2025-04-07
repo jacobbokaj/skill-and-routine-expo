@@ -6,14 +6,61 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import  TimerControl  from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
+import { getItem, setItem } from '@/app/utils/AsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { useNavigation } from 'expo-router';
 export default function HomeScreen() {
   const currentDate = new Date();
+
+  const navigation = useNavigation();
+
+  const [data, setData] = useState(null);
+
+
+  useEffect(()=> {
+    const ww = navigation.addListener('focus',()=>{
+      console.log("hejsa fra navigation");
+    })
+    return ww;
+  },[navigation]);
+
+
+
+  useEffect(()=> {
+
+    const fData = async () => {
+      const result = await setItem('username','brobygger');
+      const data = await result; 
+    
+    }
+      console.log("hihih");
+      fData();
+  },[])
+
+    useEffect(() => {
+  
+    // Asynchronous function inside useEffect
+    const fetchData = async () => {
+      const result = await getItem('username');
+
+      const data = await result;
+
+      console.log("host: " + data);
+      setData(data);  // Set state with the fetched data
+    };
+    
+    fetchData();  // Call the async function
+  }, []);
+
+  
+
   return (
     <View className="bg-slate-600">
-
       <View className="mt-20">
         <Text className="text-3xl text-blue-500 text-center px-5"> Motivation app</Text>
         <Text className="text-3xl text-blue-500 text-center">Date: {currentDate.getDay()} {currentDate.getMonth()}  {currentDate.getFullYear()}</Text>
+        <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
       </View>
       <View className="justify-center items-center space-y-4 mt-10 bg-slate-600">
 

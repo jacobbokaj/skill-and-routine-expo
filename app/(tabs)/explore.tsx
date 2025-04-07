@@ -1,13 +1,38 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
+import { StyleSheet, Image, Platform, Text } from 'react-native';
+import { useEffect, useState } from 'react';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { getItem, setItem } from '@/app/utils/AsyncStorage';
+
+
+
+function GetDatauseEffect(){}
+
+
+
 
 export default function TabTwoScreen() {
+  
+ const [data, setData] = useState(null);
+  useEffect(() => {
+    
+      // Asynchronous function inside useEffect
+      const fetchData = async () => {
+        const result = await getItem('username');
+  
+        const data = await result;
+  
+        console.log("host: " + data);
+        setData(data);  // Set state with the fetched data
+      };
+      
+      fetchData();  // Call the async function
+    }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -22,6 +47,7 @@ export default function TabTwoScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
       </ThemedView>
+      <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
