@@ -11,12 +11,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useFocusEffect, useNavigation } from 'expo-router';
 
-export default function HomeScreen() {
 
+export default function HomeScreen() {
   const [data, setData] = useState(null);
 
   const [timerCountt, setTimerCount] = useState(true);
-  
+  var today = new Date();
   useFocusEffect(
     React.useCallback(() => {
       setTimerCount(true);
@@ -62,8 +62,7 @@ export default function HomeScreen() {
   return (
     <View>
       <View className="mt-20">
-        <Text className="text-3xl text-blue-500 text-center px-5"> Motivation app</Text>
-        <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
+        <Text className="text-3xl text-blue-500 text-center px-5"> Skill Learning</Text>
       </View>
       <View className="justify-center items-center space-y-4 mt-10 bg-slate-600">
 
@@ -71,6 +70,7 @@ export default function HomeScreen() {
 
       </View>
       <View className=" justify-center items-center space-y-4 mt-40">
+        <Text className=" text-3xl text-blue-500 text-center">Date: { + today.getDate() }/{ today.getMonth() + 1}/{today.getFullYear()}</Text>
         <TimerControl timerCount={timerCountt}/>
       </View>
     </View>

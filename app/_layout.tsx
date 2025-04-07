@@ -37,3 +37,5 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+//<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+//<ThemeProvider value={DarkTheme}></ThemeProvider>

@@ -13,8 +13,10 @@ export default function TabLayout() {
 
   return (
     <Tabs
+
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      // tabBarActiveTintColor: Colors["dark"].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -38,6 +40,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          
         }}
       />
     </Tabs>
