@@ -9,12 +9,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
 
 
-
-function GetDatauseEffect(){}
-
-
-
-
 export default function Profile() {
   
  const [data, setData] = useState(null);
@@ -26,7 +20,7 @@ export default function Profile() {
   
         const data = await result;
   
-        console.log("host: " + data);
+        console.log("from profile data: " + data);
         setData(data);  // Set state with the fetched data
       };
       

@@ -12,33 +12,26 @@ import React from 'react';
 import { useFocusEffect, useNavigation } from 'expo-router';
 
 export default function HomeScreen() {
-  const currentDate = new Date();
-
-  const navigation = useNavigation();
 
   const [data, setData] = useState(null);
 
   const [timerCountt, setTimerCount] = useState(true);
-
-  useEffect(() => {
-    const ww = navigation.addListener('focus', () => {
-
-      const fetchData = async () => {
-
-        const result = await getItem('username');
-
-        const data = await result;
-        setData(data);  // Set state with the fetched data
-      };
-
-      fetchData();
-    })
-    return ww;
-  }, [navigation]);
-
+  
   useFocusEffect(
     React.useCallback(() => {
       setTimerCount(true);
+
+
+    const fetch =   async () => {
+    
+        const result = await getItem('username');
+    
+        const data = await result;
+        setData(data);  // Set state with the fetched data
+        console.log("from index data: " + data);
+      };
+      fetch();
+
       //alert('Screen was focused' + timerCountt);
       // Do something when the screen is focused
       return () => {
@@ -67,7 +60,7 @@ export default function HomeScreen() {
 
 
   return (
-    <View className="bg-slate-600">
+    <View>
       <View className="mt-20">
         <Text className="text-3xl text-blue-500 text-center px-5"> Motivation app</Text>
         <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
