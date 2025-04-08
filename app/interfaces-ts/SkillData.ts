@@ -6,6 +6,6 @@ export interface SkillData {
         TimeInfo: {
             dato: string;
             time: number;
-        }[]
+        }[];
     }
 }
