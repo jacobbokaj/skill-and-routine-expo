@@ -47,14 +47,14 @@ import React, { useState } from 'react';
       margin: 16,
       height: 50,
       borderBottomColor: 'gray',
-      borderBottomWidth: 0.5,
+      borderBottomWidth: 2,
       width: 300
     },
     icon: {
       marginRight: 5,
     },
     placeholderStyle: {
-      fontSize: 16,
+      fontSize: 20,
     },
     selectedTextStyle: {
       fontSize: 20,

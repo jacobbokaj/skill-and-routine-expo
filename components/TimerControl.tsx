@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform,Text, View,Button, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Platform,Text, View,Button, TouchableOpacity, Alert } from 'react-native';
 import { useEffect, useState, useRef } from 'react';
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -66,6 +66,17 @@ export default function TimerControl({timerCount} : Props) {
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  const resetDayAlert = () =>
+    Alert.alert('Reset Day', 'Will you reset time on this day?', [
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+      {text: 'Yes', onPress: () => handleReset()},
+    ]);
+
+
+
   return (
     <View>
 
@@ -80,18 +91,19 @@ export default function TimerControl({timerCount} : Props) {
    
     
   }}>
+
         
-        <Text className="text-3xl text-blue-500">{formatTime(seconds)}</Text>
+        <Text className="text-3xl text-white">{formatTime(seconds)}</Text>
       <TouchableOpacity      
         onPress={() => setIsRunning(prev => !prev)}
       >   
-        <Text className="text-3xl text-blue-500">{isRunning ? 'Pause' : 'Play'}</Text>     
+        <Text className="text-3xl text-white">{isRunning ? 'Pause' : 'Play'}</Text>     
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={()=> handleReset()}
+        onPress={()=> resetDayAlert()}
       >
-          <Text className="text-3xl text-blue-500">Reset day</Text>
+          <Text className="text-3xl text-white">Reset day</Text>
       </TouchableOpacity>
 
 
