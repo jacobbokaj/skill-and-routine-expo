@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
+
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
@@ -17,7 +18,9 @@ export default function HomeScreen() {
 
   const [timerCountt, setTimerCount] = useState(true);
   var today = new Date();
-  useFocusEffect(
+ 
+ 
+ /* useFocusEffect(
     React.useCallback(() => {
       setTimerCount(true);
 
@@ -53,7 +56,7 @@ export default function HomeScreen() {
     }
     console.log("hihih");
     fData();
-  }, [])
+  }, [])*/
 
 
 
@@ -61,6 +64,13 @@ export default function HomeScreen() {
 
   return (
     <View>
+      
+      <Image
+        source={require('@/assets/bg/background.png')}
+        className="absolute w-full h-full z-0 self-center"
+
+        resizeMode="cover"
+      />
       <View className="mt-20">
         <Text className="text-3xl text-white text-center px-5"> Skill Learning</Text>
       </View>

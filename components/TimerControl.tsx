@@ -115,9 +115,6 @@ export default function TimerControl({timerCount} : Props) {
 
     </View>
   );
-
-
-  
 }
 
 /*
