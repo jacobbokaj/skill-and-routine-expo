@@ -6,8 +6,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
-
+import { SkillData } from '../interfaces-ts/SkillData';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
+import { getSkillData } from '../utils/AsyncStorageSkillData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useFocusEffect, useNavigation } from 'expo-router';
@@ -45,19 +46,45 @@ export default function HomeScreen() {
       };
     }, [])
   );
-
+  */
 
   useEffect(() => {
 
+    const exampleSkillData: SkillData = {
+      data: {
+          name: "Yoga",
+          totalTime: 120,
+          streak: 10,
+          TimeInfo: [
+              { dato: "2025-04-01", time: 30 },
+              { dato: "2025-04-02", time: 20 },
+              { dato: "2025-04-03", time: 25 },
+              { dato: "2025-04-04", time: 15 },
+              { dato: "2025-04-05", time: 30 },
+          ]
+      }
+  };
+
     const fData = async () => {
-      const result = await setItem('username', 20);
+      const result = await setItem('Yoga', exampleSkillData);
       const data = await result;
 
     }
     console.log("hihih");
     fData();
-  }, [])*/
 
+    const fetch =   async () => {
+    
+      const result = await getSkillData('Yoga');
+  
+      const data = await result;
+      console.log("from index data: " + data?.data.streak);
+      //setData(data);  // Set state with the fetched data
+    };
+    fetch();
+
+  }, []);
+  console.log("hello from index");
 
 
 

@@ -1,9 +1,13 @@
 // utils/AsyncStorage.js
-
+import SkillData from '../interfaces-ts/SkillData'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setItem = async (key, value) => {
   try {
+
+    console.log(value);
+    console.log("with Json stringify: " + JSON.stringify(value));
+
     await AsyncStorage.setItem(key, JSON.stringify(value));
     console.log("item set: " + key + "  value: "+ value);
     console.log("host");
@@ -21,6 +25,9 @@ export const getItem = async (key) => {
     return null;
   }
 };
+
+
+
 
 export const removeItem = async (key) => {
   try {
