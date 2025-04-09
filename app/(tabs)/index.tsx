@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
-import { SkillData } from '../interfaces-ts/SkillData';
+import  SkillData  from '../interfaces-ts/SkillData';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
 import { getSkillData } from '../utils/AsyncStorageSkillData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,8 +16,9 @@ import { useFocusEffect, useNavigation } from 'expo-router';
 
 export default function HomeScreen() {
   const [data, setData] = useState(null);
-
-  const [timerCountt, setTimerCount] = useState(true);
+  const [skillData, setSkillData] = useState<SkillData[]>([]);
+  const [skillNames, setSkillNames] = useState<string[]>([]);
+  const [timerCountt, setTimerCountt] = useState(true);
   var today = new Date();
  
  
@@ -70,16 +71,21 @@ export default function HomeScreen() {
       const data = await result;
 
     }
-    console.log("hihih");
+
     fData();
 
     const fetch =   async () => {
     
       const result = await getSkillData('Yoga');
   
-      const data = await result;
-      console.log("from index data: " + data?.data.streak);
-      //setData(data);  // Set state with the fetched data
+      if (result !== null) {
+        const sD = skillData;
+        sD.push(result);
+        setSkillData(sD);  // Add new data to the existing array
+      
+        setSkillNames(skillData?.map(skill => skill.data.name) ?? []);
+        console.log(skillNames[skillNames.length -1]);
+      }
     };
     fetch();
 
@@ -103,7 +109,7 @@ export default function HomeScreen() {
       </View>
       <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
 
-        <SkillChosen />
+        <SkillChosen skills={skillNames}/>
 
       </View>
       <View className=" justify-center items-center space-y-4 mt-40">

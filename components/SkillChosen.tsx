@@ -3,6 +3,11 @@ import React, { useState } from 'react';
   import { Dropdown } from 'react-native-element-dropdown';
   import AntDesign from '@expo/vector-icons/AntDesign';
 
+interface Props {
+  skills?: string[];
+}
+
+
   const data = [
     { label: 'Training', value: '1' },
     { label: 'Instrument', value: '2' },
@@ -14,8 +19,17 @@ import React, { useState } from 'react';
     { label: 'Make Games', value: '8' },
   ];
 
-  const SkillChosen = () => {
+  const SkillChosen = ({ skills }: Props) => {
+
+
+
     const [value, setValue] = useState(null);
+
+    const skillWithValues = skills?.map((skill, index)  => ({
+      label:  skill, // or something smarter if needed
+      value:  index + 1
+    }));
+
 
     return (
       <Dropdown
@@ -24,7 +38,7 @@ import React, { useState } from 'react';
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        data={data}
+        data={skillWithValues ?? []}
         search
         maxHeight={300}
         labelField="label"

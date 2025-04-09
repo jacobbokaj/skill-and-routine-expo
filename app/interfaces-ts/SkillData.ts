@@ -1,4 +1,4 @@
-export interface SkillData {
+export default interface SkillData {
     data: {
         name: string;
         totalTime: number;

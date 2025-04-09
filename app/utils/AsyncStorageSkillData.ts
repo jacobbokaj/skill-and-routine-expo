@@ -1,11 +1,11 @@
-import { SkillData } from '../interfaces-ts/SkillData'
+import  SkillData  from '../interfaces-ts/SkillData'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const getSkillData = async (key: string): Promise<SkillData | null> => {
   try {
     const value = await AsyncStorage.getItem(key);
-    console.log(value);
+  //  console.log(value);
 
     const skillData: SkillData | null = value != null ? JSON.parse(value) as SkillData : null;
     return skillData;
