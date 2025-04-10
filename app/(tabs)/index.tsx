@@ -19,12 +19,13 @@ export default function HomeScreen() {
   const [skillData, setSkillData] = useState<SkillData[]>([]);
   const [skillNames, setSkillNames] = useState<string[]>([]);
   const [timerCountt, setTimerCountt] = useState(true);
+  const [chosenSkill, setChosenSkill] = useState('');
   var today = new Date();
  
  
- /* useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
-      setTimerCount(true);
+      setTimerCountt(true);
 
 
     const fetch =   async () => {
@@ -40,14 +41,14 @@ export default function HomeScreen() {
       //alert('Screen was focused' + timerCountt);
       // Do something when the screen is focused
       return () => {
-        setTimerCount(false);
+        setTimerCountt(false);
       //  alert('Screen was unfocused: ' + timerCountt);
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
     }, [])
   );
-  */
+  
 
   useEffect(() => {
 
@@ -90,9 +91,10 @@ export default function HomeScreen() {
     fetch();
 
   }, []);
-  console.log("hello from index");
 
-
+  const handleSkillChosen = (skill: string) => {
+    setChosenSkill(skill);
+  }
 
 
   return (
@@ -109,7 +111,7 @@ export default function HomeScreen() {
       </View>
       <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
 
-        <SkillChosen skills={skillNames}/>
+        <SkillChosen skills={skillNames} chosenSkill={handleSkillChosen}/>
 
       </View>
       <View className=" justify-center items-center space-y-4 mt-40">

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 interface Props {
   skills?: string[];
+  chosenSkill: (skill: string) => void;
 }
 
 
@@ -19,7 +20,7 @@ interface Props {
     { label: 'Make Games', value: '8' },
   ];
 
-  const SkillChosen = ({ skills }: Props) => {
+  const SkillChosen = ({ skills, chosenSkill }: Props) => {
 
 
 
@@ -48,6 +49,7 @@ interface Props {
         value={value}
         onChange={item => {
           setValue(item.value);
+          chosenSkill(item.label);
         }}
         
       />
