@@ -139,24 +139,22 @@ export default function HomeScreen() {
 
     var targetSkillDateProgress = null;
     if (foundSkillData !== null) {
-      
+
       for (let i = 0; i < foundSkillData?.data.TimeInfo.length; i++) {
 
-        if (foundSkillData?.data.TimeInfo[i].date === FormatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())) {
+        if (foundSkillData?.data.TimeInfo[i].date === formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())) {
           targetSkillDateProgress = foundSkillData?.data.TimeInfo[i];
           setSkillDateProgess(foundSkillData?.data.TimeInfo[i]);
         }
       }
     }
 
-
-
     const seconds = targetSkillDateProgress?.time ?? 0;
     setCurrentSkillSeconds(seconds);
     setdropdownMenuIsInteracted(!dropdownMenuIsInteracted);
   }
 
-  const FormatDate = (day: string, month: string, year: string) => {
+  const formatDate = (day: string, month: string, year: string) => {
     var dayConvert = day.length === 2 ? day : `0${day}`;
     var monthConvert = month.length == 2 ? month : `0${month}`;
     return `${dayConvert}-${monthConvert}-${year}`;
@@ -182,7 +180,7 @@ export default function HomeScreen() {
         </View>
       )}
       <View className=" justify-center items-center space-y-4 mt-40">
-        <Text className=" text-3xl text-white text-center">Date: {FormatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())}</Text>
+        <Text className=" text-3xl text-white text-center">Date: {formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())}</Text>
         <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted} />
       </View>
     </View>
