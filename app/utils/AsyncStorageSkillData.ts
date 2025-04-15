@@ -15,7 +15,7 @@ export const getAsyncSkillData = async (key: string): Promise<SkillData | null> 
   }
 };
 
-export const setAsyncSkillData = async (key : string, value: string) => {
+export const setAsyncSkillData = async (key : string, value: SkillData) => {
   try {
 
     await AsyncStorage.setItem(key, JSON.stringify(value));

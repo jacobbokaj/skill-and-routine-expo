@@ -4,7 +4,7 @@ export default interface SkillData {
         totalTime: number;
         streak: number;
         TimeInfo: {
-            dato: string;
+            date: string;
             time: number;
         }[];
     }

@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
-import  SkillData  from '../interfaces-ts/SkillData';
+import SkillData from '../interfaces-ts/SkillData';
 import SkillsAddedData from '../interfaces-ts/SkillsAddedData';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
 import { getAsyncSkillsAddedData, setAsyncSkillsAddedData } from '../utils/AsyncStorageSkillsAddedData';
@@ -25,27 +25,29 @@ export default function HomeScreen() {
       skillNames: []
     }
   });
-  const [currentSkillSeconds,setCurrentSkillSeconds] = useState(0);
+  const [currentSkillSeconds, setCurrentSkillSeconds] = useState(0);
   const [isTimerOn, setIsTimerOn] = useState(true);
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
+  const [skillDateProgress, setSkillDateProgess] = useState<{ date: string; time: number }>();
   const [isLoading, setIsLoading] = useState(true);
   // Not the best way but it works. I switch the boolean value true/false to make a call in TimerControl component.
-  const [dropdownMenuIsInteracted,setdropdownMenuIsInteracted] = useState(false);
+  const [dropdownMenuIsInteracted, setdropdownMenuIsInteracted] = useState(false);
   var today = new Date();
- 
- 
+
+
   const exampleSkillData: SkillData = {
     data: {
-        name: "Yoga",
-        totalTime: 120,
-        streak: 10,
-        TimeInfo: [
-            { dato: "01-03-2025", time: 30 },
-            { dato: "02-03-2025", time: 20 },
-            { dato: "03-03-2025", time: 25 },
-            { dato: "04-03-2025", time: 15 },
-            { dato: "05-03-2025", time: 30 },
-        ]
+      name: "Yoga",
+      totalTime: 120,
+      streak: 10,
+      TimeInfo: [
+        { date: "01-03-2025", time: 30 },
+        { date: "02-03-2025", time: 20 },
+        { date: "03-03-2025", time: 25 },
+        { date: "04-03-2025", time: 15 },
+        { date: "05-03-2025", time: 30 },
+        { date: "15-04-2025", time: 45 },
+      ]
     }
   };
 
@@ -66,48 +68,58 @@ export default function HomeScreen() {
       };
     }, [])
   );
-  
-  const ImplementData = () =>{
-    
-    const fetchSki =   async () => {
-      
+
+  const ImplementData = () => {
+
+    const fetchSki = async () => {
+
 
       // PLACE HOLDER CODE----------------------------------------------
       skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
 
 
-      await setAsyncSkillsAddedData('SkillsAddedData',skillsAddedData);
-  
+      await setAsyncSkillsAddedData('SkillsAddedData', skillsAddedData);
+
     };
     fetchSki();
-    
-    const fetchSkillsAddedData =   async () => {
-  
+
+    const fetchPlac = async () => {
+
+      await setAsyncSkillData(exampleSkillData.data.name,exampleSkillData)
+    };
+
+    fetchPlac();
+
+
+
+
+    const fetchSkillsAddedData = async () => {
+
       const result = await getAsyncSkillsAddedData('SkillsAddedData');
-  
-      if(result != undefined){
+
+      if (result != undefined) {
 
         setSkillsAddedData(result);
       }
       setIsLoading(false)
     };
-  
-  
+
+
     fetchSkillsAddedData();
-  
+
     const fetchAll = async () => {
       const promises = skillsAddedData.data.skillNames.map(name => getAsyncSkillData(name));
       const results = await Promise.all(promises);
-  
+
       const validResults = results.filter(
         (result): result is SkillData =>
           result !== null && !skillsData.some(skill => skill.data.name === result.data.name)
       );
-      setSkillsData(validResults);  
+      setSkillsData(validResults);
     };
-  
+
     fetchAll();
-    setIsLoading(false);   
+    setIsLoading(false);
   }
 
 
@@ -117,42 +129,61 @@ export default function HomeScreen() {
 
     for (let i = 0; i < skillsData.length; i++) {
 
-      if (skillsData[i].data.name == skillName) {
+      if (skillsData[i].data.name === skillName) {
         setChosenSkill(skillsData[i]);
         foundSkillData = skillsData[i];
         break;
-      } 
-           
+      }
+
     }
 
-    const seconds = foundSkillData?.data.totalTime ?? 0;
+    var targetSkillDateProgress = null;
+    if (foundSkillData !== null) {
+      
+      for (let i = 0; i < foundSkillData?.data.TimeInfo.length; i++) {
+
+        if (foundSkillData?.data.TimeInfo[i].date === FormatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())) {
+          targetSkillDateProgress = foundSkillData?.data.TimeInfo[i];
+          setSkillDateProgess(foundSkillData?.data.TimeInfo[i]);
+        }
+      }
+    }
+
+
+
+    const seconds = targetSkillDateProgress?.time ?? 0;
     setCurrentSkillSeconds(seconds);
     setdropdownMenuIsInteracted(!dropdownMenuIsInteracted);
   }
 
+  const FormatDate = (day: string, month: string, year: string) => {
+    var dayConvert = day.length === 2 ? day : `0${day}`;
+    var monthConvert = month.length == 2 ? month : `0${month}`;
+    return `${dayConvert}-${monthConvert}-${year}`;
+  };
 
   return (
     <View>
       <Image
-      source={require('@/assets/bg/background.png')}
-      className="absolute w-full h-full z-0 self-center"
-      
-      resizeMode="cover"
+        source={require('@/assets/bg/background.png')}
+        className="absolute w-full h-full z-0 self-center"
+
+        resizeMode="cover"
       />
       <View className="mt-20">
         <Text className="text-3xl text-white text-center px-5"> Skill Learning</Text>
       </View>
 
       {isLoading ? (
-  <Text className="text-white text-center mt-10">Loading...</Text>
-) : (
-  <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
-    <SkillChosen skillNames={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen}/>
-  </View>
-)}
+        <Text className="text-white text-center mt-10">Loading...</Text>
+      ) : (
+        <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
+          <SkillChosen skillNames={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen} />
+        </View>
+      )}
       <View className=" justify-center items-center space-y-4 mt-40">
-        <Text className=" text-3xl text-white text-center">Date: { + today.getDate() }/{ today.getMonth() + 1}/{today.getFullYear()}</Text>
-        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted}/>
+        <Text className=" text-3xl text-white text-center">Date: {FormatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())}</Text>
+        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted} />
       </View>
     </View>
   );
