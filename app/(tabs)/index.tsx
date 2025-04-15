@@ -19,16 +19,17 @@ import { isLoading } from 'expo-font';
 
 export default function HomeScreen() {
 
-  const [skillData, setSkillData] = useState<SkillData[]>([]);
+  const [skillsData, setSkillsData] = useState<SkillData[]>([]);
   const [skillsAddedData, setSkillsAddedData] = useState<SkillsAddedData>({
     data: {
       skillNames: []
     }
   });
-    
-  const [timerCountt, setTimerCountt] = useState(true);
-  const [chosenSkill, setChosenSkill] = useState('');
+  const [currentSkillSeconds,setCurrentSkillSeconds] = useState(0);
+  const [isTimerOn, setIsTimerOn] = useState(true);
+  const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [isLoading, setIsLoading] = useState(true);
+  const [dropdownMenuInteracted,setDropdownMenuInteracted] = useState(false);
   var today = new Date();
  
  
@@ -67,19 +68,18 @@ export default function HomeScreen() {
 
     //Going to this webpage.
     React.useCallback(() => {
-      setTimerCountt(true);
+      setIsTimerOn(true);
       ImplementData();
 
       //Leaving this webpage.
       return () => {
-        setTimerCountt(false);
+        setIsTimerOn(false);
       };
     }, [])
   );
   
   const ImplementData = () =>{
     
-    console.log("in the start of useCallback");
     const fetchSki =   async () => {
       
       skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
@@ -111,7 +111,7 @@ export default function HomeScreen() {
         const results = await Promise.all(promises);
     
         const validResults = results.filter(result => result !== null) as SkillData[];
-        setSkillData(prev => [...prev, ...validResults]);
+        setSkillsData(prev => [...prev, ...validResults]);
       };
     
       fetchAll();
@@ -120,10 +120,17 @@ export default function HomeScreen() {
   }
 
 
-  const handleSkillChosen = (skill: string) => {
-    setChosenSkill(skill);
+  const handleSkillChosen = (skillName: string) => {
 
-
+    for (let i = 0; i < skillsData.length; i++) {
+      if (skillsData[i].data.name == skillName) {
+        setChosenSkill(skillsData[i]);
+      }      
+    }
+    const seconds = chosenSkill?.data.totalTime ?? 0;
+    console.log("Seconds: " + seconds);
+    setCurrentSkillSeconds(seconds);
+    setDropdownMenuInteracted(!dropdownMenuInteracted);
   }
 
 
@@ -148,7 +155,7 @@ export default function HomeScreen() {
 )}
       <View className=" justify-center items-center space-y-4 mt-40">
         <Text className=" text-3xl text-white text-center">Date: { + today.getDate() }/{ today.getMonth() + 1}/{today.getFullYear()}</Text>
-        <TimerControl timerCount={timerCountt}/>
+        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdown={dropdownMenuInteracted}/>
       </View>
     </View>
   );

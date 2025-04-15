@@ -5,8 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const getAsyncSkillsAddedData = async (key: string): Promise<SkillsAddedData | null> => {
   try {
     const value = await AsyncStorage.getItem(key);
-    // return from website               value: "{\"skillNames\":[\"Yoga\"]}"
-    console.log("value: " + value);
+
 
     const skillsAddedData: SkillsAddedData | null = value != null ? JSON.parse(value) as SkillsAddedData : null;
     return skillsAddedData;

@@ -22,7 +22,6 @@ interface Props {
 
   const SkillChosen = ({ skills, chosenSkill }: Props) => {
 
-    console.log("call from skillChosen");
 
     const [skillNames,setSkillNames] = useState(skills != undefined ? skills : [])
 

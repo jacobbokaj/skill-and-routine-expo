@@ -7,11 +7,13 @@ import { ThemedView } from '@/components/ThemedView';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
 
 interface Props{
-  timerCount: boolean;
+  isTimerOn: boolean;
+  currentSkillSeconds: number;
+  dropdown: boolean;
 }
 
 
-export default function TimerControl({timerCount} : Props) {
+export default function TimerControl({isTimerOn, currentSkillSeconds, dropdown} : Props) {
   
   const styles = `bg-blue-500 text-white`;
   const [seconds, setSeconds] = useState(0);
@@ -29,12 +31,14 @@ export default function TimerControl({timerCount} : Props) {
   }
 
 
+
   useEffect(()=> {
-    if(timerCount == false){
+    if(isTimerOn == false){
       setIsRunning(false);
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
-  },[timerCount]);
+    setSeconds(currentSkillSeconds);
+  },[isTimerOn,dropdown]);
 
   
 
