@@ -22,11 +22,14 @@ interface Props {
 
   const SkillChosen = ({ skills, chosenSkill }: Props) => {
 
+    console.log("call from skillChosen");
+
+    const [skillNames,setSkillNames] = useState(skills != undefined ? skills : [])
 
 
     const [value, setValue] = useState(null);
 
-    const skillWithValues = skills?.map((skill, index)  => ({
+    const skillWithValues = skillNames?.map((skill, index)  => ({
       label:  skill, // or something smarter if needed
       value:  index + 1
     }));

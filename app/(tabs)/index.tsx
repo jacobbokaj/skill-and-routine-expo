@@ -7,113 +7,145 @@ import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
 import  SkillData  from '../interfaces-ts/SkillData';
+import SkillsAddedData from '../interfaces-ts/SkillsAddedData';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
-import { getSkillData } from '../utils/AsyncStorageSkillData';
+import { getAsyncSkillsAddedData, setAsyncSkillsAddedData } from '../utils/AsyncStorageSkillsAddedData';
+import { getAsyncSkillData, setAsyncSkillData } from '../utils/AsyncStorageSkillData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useFocusEffect, useNavigation } from 'expo-router';
+import { isLoading } from 'expo-font';
 
 
 export default function HomeScreen() {
-  const [data, setData] = useState(null);
+
   const [skillData, setSkillData] = useState<SkillData[]>([]);
-  const [skillNames, setSkillNames] = useState<string[]>([]);
+  const [skillsAddedData, setSkillsAddedData] = useState<SkillsAddedData>({
+    data: {
+      skillNames: []
+    }
+  });
+    
   const [timerCountt, setTimerCountt] = useState(true);
   const [chosenSkill, setChosenSkill] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   var today = new Date();
  
  
+  const exampleSkillData: SkillData = {
+    data: {
+        name: "Yoga",
+        totalTime: 120,
+        streak: 10,
+        TimeInfo: [
+            { dato: "2025-04-01", time: 30 },
+            { dato: "2025-04-02", time: 20 },
+            { dato: "2025-04-03", time: 25 },
+            { dato: "2025-04-04", time: 15 },
+            { dato: "2025-04-05", time: 30 },
+        ]
+    }
+  };
+
+
+  // Fail something with react render and async. So because async run in a diffirent thread so render wont wait on the async to finish.
+
+
+
+
+  useEffect(() => {
+   console.log("useEffect in index page");
+   // ImplementData();
+   if (skillsAddedData?.data !== undefined) {
+    console.log("skillsAddedData not undefinded: " + skillsAddedData?.data.skillNames);
+
+    
+  }
+  },[skillsAddedData])
+
   useFocusEffect(
+
+    //Going to this webpage.
     React.useCallback(() => {
       setTimerCountt(true);
+      ImplementData();
 
-
-    const fetch =   async () => {
-    
-        const result = await getItem('username');
-    
-        const data = await result;
-        setData(data);  // Set state with the fetched data
-        console.log("from index data: " + data);
-      };
-      fetch();
-
-      //alert('Screen was focused' + timerCountt);
-      // Do something when the screen is focused
+      //Leaving this webpage.
       return () => {
         setTimerCountt(false);
-      //  alert('Screen was unfocused: ' + timerCountt);
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
       };
     }, [])
   );
   
-
-  useEffect(() => {
-
-    const exampleSkillData: SkillData = {
-      data: {
-          name: "Yoga",
-          totalTime: 120,
-          streak: 10,
-          TimeInfo: [
-              { dato: "2025-04-01", time: 30 },
-              { dato: "2025-04-02", time: 20 },
-              { dato: "2025-04-03", time: 25 },
-              { dato: "2025-04-04", time: 15 },
-              { dato: "2025-04-05", time: 30 },
-          ]
-      }
-  };
-
-    const fData = async () => {
-      const result = await setItem('Yoga', exampleSkillData);
-      const data = await result;
-
-    }
-
-    fData();
-
-    const fetch =   async () => {
+  const ImplementData = () =>{
     
-      const result = await getSkillData('Yoga');
-  
-      if (result !== null) {
-        const sD = skillData;
-        sD.push(result);
-        setSkillData(sD);  // Add new data to the existing array
+    console.log("in the start of useCallback");
+    const fetchSki =   async () => {
       
-        setSkillNames(skillData?.map(skill => skill.data.name) ?? []);
-        console.log(skillNames[skillNames.length -1]);
-      }
+      skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
+      await setAsyncSkillsAddedData('SkillsAddedData',skillsAddedData);
+  
     };
-    fetch();
+    fetchSki();
+    
+    const fetchSkillsAddedData =   async () => {
+  
+      const result = await getAsyncSkillsAddedData('SkillsAddedData');
+  
+      if(result != undefined){
 
-  }, []);
+        var skillNameResult = result.data.skillNames[0];
+        skillsAddedData.data.skillNames.push(skillNameResult);
+        setSkillsAddedData(skillsAddedData);
+      }
+      setIsLoading(false)
+    };
+  
+  
+    fetchSkillsAddedData();
+  
+    if(skillsAddedData?.data !== undefined){
+  
+      const fetchAll = async () => {
+        const promises = skillsAddedData.data.skillNames.map(name => getAsyncSkillData(name));
+        const results = await Promise.all(promises);
+    
+        const validResults = results.filter(result => result !== null) as SkillData[];
+        setSkillData(prev => [...prev, ...validResults]);
+      };
+    
+      fetchAll();
+      setIsLoading(false);
+    }
+  }
+
 
   const handleSkillChosen = (skill: string) => {
     setChosenSkill(skill);
+
+
   }
 
 
   return (
     <View>
-      
       <Image
-        source={require('@/assets/bg/background.png')}
-        className="absolute w-full h-full z-0 self-center"
-
-        resizeMode="cover"
+      source={require('@/assets/bg/background.png')}
+      className="absolute w-full h-full z-0 self-center"
+      
+      resizeMode="cover"
       />
       <View className="mt-20">
         <Text className="text-3xl text-white text-center px-5"> Skill Learning</Text>
       </View>
-      <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
 
-        <SkillChosen skills={skillNames} chosenSkill={handleSkillChosen}/>
-
-      </View>
+      {isLoading ? (
+  <Text className="text-white text-center mt-10">Loading...</Text>
+) : (
+  <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
+    <SkillChosen skills={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen}/>
+  </View>
+)}
       <View className=" justify-center items-center space-y-4 mt-40">
         <Text className=" text-3xl text-white text-center">Date: { + today.getDate() }/{ today.getMonth() + 1}/{today.getFullYear()}</Text>
         <TimerControl timerCount={timerCountt}/>
