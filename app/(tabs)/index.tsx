@@ -29,7 +29,8 @@ export default function HomeScreen() {
   const [isTimerOn, setIsTimerOn] = useState(true);
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [isLoading, setIsLoading] = useState(true);
-  const [dropdownMenuInteracted,setDropdownMenuInteracted] = useState(false);
+  // Not the best way but it works. I switch the boolean value true/false to make a call in TimerControl component.
+  const [dropdownMenuIsInteracted,setdropdownMenuIsInteracted] = useState(false);
   var today = new Date();
  
  
@@ -39,11 +40,11 @@ export default function HomeScreen() {
         totalTime: 120,
         streak: 10,
         TimeInfo: [
-            { dato: "2025-04-01", time: 30 },
-            { dato: "2025-04-02", time: 20 },
-            { dato: "2025-04-03", time: 25 },
-            { dato: "2025-04-04", time: 15 },
-            { dato: "2025-04-05", time: 30 },
+            { dato: "01-03-2025", time: 30 },
+            { dato: "02-03-2025", time: 20 },
+            { dato: "03-03-2025", time: 25 },
+            { dato: "04-03-2025", time: 15 },
+            { dato: "05-03-2025", time: 30 },
         ]
     }
   };
@@ -51,18 +52,6 @@ export default function HomeScreen() {
 
   // Fail something with react render and async. So because async run in a diffirent thread so render wont wait on the async to finish.
 
-
-
-
-  useEffect(() => {
-   console.log("useEffect in index page");
-   // ImplementData();
-   if (skillsAddedData?.data !== undefined) {
-    console.log("skillsAddedData not undefinded: " + skillsAddedData?.data.skillNames);
-
-    
-  }
-  },[skillsAddedData])
 
   useFocusEffect(
 
@@ -82,7 +71,11 @@ export default function HomeScreen() {
     
     const fetchSki =   async () => {
       
+
+      // PLACE HOLDER CODE----------------------------------------------
       skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
+
+
       await setAsyncSkillsAddedData('SkillsAddedData',skillsAddedData);
   
     };
@@ -94,9 +87,7 @@ export default function HomeScreen() {
   
       if(result != undefined){
 
-        var skillNameResult = result.data.skillNames[0];
-        skillsAddedData.data.skillNames.push(skillNameResult);
-        setSkillsAddedData(skillsAddedData);
+        setSkillsAddedData(result);
       }
       setIsLoading(false)
     };
@@ -104,33 +95,39 @@ export default function HomeScreen() {
   
     fetchSkillsAddedData();
   
-    if(skillsAddedData?.data !== undefined){
+    const fetchAll = async () => {
+      const promises = skillsAddedData.data.skillNames.map(name => getAsyncSkillData(name));
+      const results = await Promise.all(promises);
   
-      const fetchAll = async () => {
-        const promises = skillsAddedData.data.skillNames.map(name => getAsyncSkillData(name));
-        const results = await Promise.all(promises);
-    
-        const validResults = results.filter(result => result !== null) as SkillData[];
-        setSkillsData(prev => [...prev, ...validResults]);
-      };
-    
-      fetchAll();
-      setIsLoading(false);
-    }
+      const validResults = results.filter(
+        (result): result is SkillData =>
+          result !== null && !skillsData.some(skill => skill.data.name === result.data.name)
+      );
+      setSkillsData(validResults);  
+    };
+  
+    fetchAll();
+    setIsLoading(false);   
   }
 
 
   const handleSkillChosen = (skillName: string) => {
 
+    var foundSkillData = null;
+
     for (let i = 0; i < skillsData.length; i++) {
+
       if (skillsData[i].data.name == skillName) {
         setChosenSkill(skillsData[i]);
-      }      
+        foundSkillData = skillsData[i];
+        break;
+      } 
+           
     }
-    const seconds = chosenSkill?.data.totalTime ?? 0;
-    console.log("Seconds: " + seconds);
+
+    const seconds = foundSkillData?.data.totalTime ?? 0;
     setCurrentSkillSeconds(seconds);
-    setDropdownMenuInteracted(!dropdownMenuInteracted);
+    setdropdownMenuIsInteracted(!dropdownMenuIsInteracted);
   }
 
 
@@ -150,12 +147,12 @@ export default function HomeScreen() {
   <Text className="text-white text-center mt-10">Loading...</Text>
 ) : (
   <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
-    <SkillChosen skills={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen}/>
+    <SkillChosen skillNames={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen}/>
   </View>
 )}
       <View className=" justify-center items-center space-y-4 mt-40">
         <Text className=" text-3xl text-white text-center">Date: { + today.getDate() }/{ today.getMonth() + 1}/{today.getFullYear()}</Text>
-        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdown={dropdownMenuInteracted}/>
+        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted}/>
       </View>
     </View>
   );

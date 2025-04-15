@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
   import { StyleSheet } from 'react-native';
   import { Dropdown } from 'react-native-element-dropdown';
   import AntDesign from '@expo/vector-icons/AntDesign';
 
 interface Props {
-  skills?: string[];
+  skillNames: string[];
   chosenSkill: (skill: string) => void;
 }
 
@@ -20,18 +20,23 @@ interface Props {
     { label: 'Make Games', value: '8' },
   ];
 
-  const SkillChosen = ({ skills, chosenSkill }: Props) => {
+  const SkillChosen = ({ skillNames, chosenSkill }: Props) => {
 
 
-    const [skillNames,setSkillNames] = useState(skills != undefined ? skills : [])
-
+   
+    const [skillNamesWithValues, setSkillNamesWithValues] = useState<{ label: string; value: number }[]>([]);
 
     const [value, setValue] = useState(null);
 
-    const skillWithValues = skillNames?.map((skill, index)  => ({
-      label:  skill, // or something smarter if needed
-      value:  index + 1
-    }));
+    useEffect(()=> {
+
+      setSkillNamesWithValues(skillNames?.map((skill, index)  => ({
+        label:  skill, // or something smarter if needed
+        value:  index + 1
+      })));
+    },[skillNames])
+
+
 
 
     return (
@@ -41,7 +46,7 @@ interface Props {
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        data={skillWithValues ?? []}
+        data={skillNamesWithValues ?? []}
         search
         maxHeight={300}
         labelField="label"

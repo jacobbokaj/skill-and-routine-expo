@@ -9,11 +9,11 @@ import { getItem, setItem } from '@/app/utils/AsyncStorage';
 interface Props{
   isTimerOn: boolean;
   currentSkillSeconds: number;
-  dropdown: boolean;
+  dropdownMenuIsInteracted: boolean;
 }
 
 
-export default function TimerControl({isTimerOn, currentSkillSeconds, dropdown} : Props) {
+export default function TimerControl({isTimerOn, currentSkillSeconds, dropdownMenuIsInteracted} : Props) {
   
   const styles = `bg-blue-500 text-white`;
   const [seconds, setSeconds] = useState(0);
@@ -38,7 +38,7 @@ export default function TimerControl({isTimerOn, currentSkillSeconds, dropdown} 
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
     setSeconds(currentSkillSeconds);
-  },[isTimerOn,dropdown]);
+  },[isTimerOn,dropdownMenuIsInteracted]);
 
   
 
