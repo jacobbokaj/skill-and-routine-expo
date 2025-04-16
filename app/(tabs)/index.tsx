@@ -30,6 +30,7 @@ export default function HomeScreen() {
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [skillDateProgress, setSkillDateProgess] = useState<{ date: string; time: number }>();
   const [isLoading, setIsLoading] = useState(true);
+
   // Not the best way but it works. I switch the boolean value true/false to make a call in TimerControl component.
   const [dropdownMenuIsInteracted, setdropdownMenuIsInteracted] = useState(false);
   var today = new Date();
@@ -47,13 +48,10 @@ export default function HomeScreen() {
         { date: "04-03-2025", time: 15 },
         { date: "05-03-2025", time: 30 },
         { date: "15-04-2025", time: 45 },
+        { date: "16-04-2025", time: 42 },
       ]
     }
   };
-
-
-  // Fail something with react render and async. So because async run in a diffirent thread so render wont wait on the async to finish.
-
 
   useFocusEffect(
 
@@ -71,10 +69,10 @@ export default function HomeScreen() {
 
   const ImplementData = () => {
 
+    // PLACE HOLDER CODE-------------------------------------------------------------------------------------------------------------
     const fetchSki = async () => {
 
 
-      // PLACE HOLDER CODE----------------------------------------------
       skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
 
 
@@ -83,6 +81,7 @@ export default function HomeScreen() {
     };
     fetchSki();
 
+    // PLACE HOLDER CODE-------------------------------------------------------------------------------------------------------------
     const fetchPlac = async () => {
 
       await setAsyncSkillData(exampleSkillData.data.name,exampleSkillData)
@@ -154,6 +153,59 @@ export default function HomeScreen() {
     setdropdownMenuIsInteracted(!dropdownMenuIsInteracted);
   }
 
+  const handleIsTimerRunning = (isTimerRunning: boolean, time: number) => {
+
+    if (skillDateProgress?.time !== undefined) {
+      skillDateProgress.time = time;    
+    }
+
+
+    // Create to whenever the timer is paused it will save the data in the asyncStorage
+    // If the date does not exists in the current data time info array it will push a new timeInfo and save.
+    if (isTimerRunning == false && chosenSkill?.data !== undefined && skillDateProgress?.date !== undefined && skillDateProgress.time !== undefined) {
+
+      var foundTargetTimeInfo = false;
+      for (let i = 0; i < chosenSkill.data.TimeInfo.length; i++) {
+
+        if (chosenSkill.data.TimeInfo[i].date === skillDateProgress.date) {
+
+            chosenSkill.data.TimeInfo[i].time = skillDateProgress.time;
+            foundTargetTimeInfo = true;
+            console.log("Found day");
+        }
+      }
+
+      if (foundTargetTimeInfo === false) {
+        chosenSkill.data.TimeInfo.push(skillDateProgress);
+        console.log("Implement new day: " + skillDateProgress.date);
+      }
+      const uploadNewData = async () => { 
+        console.log("Updated: " + chosenSkill.data.name);
+        await setAsyncSkillData(chosenSkill.data.name, chosenSkill);
+      };
+      uploadNewData();
+
+
+      const downloadNewData = async () => { 
+       var result = await getAsyncSkillData(chosenSkill.data.name);
+        console.log("downloaded: " + result?.data.name);
+
+        if (result?.data !== undefined) {
+          for (let i = 0; i < result.data.TimeInfo.length; i++) {
+            console.log("Result timerInfo: " + result.data.TimeInfo[i].date + "   timer: " + result.data.TimeInfo[i].time);
+            
+          }
+          
+        }
+
+
+      };
+      downloadNewData();
+    }
+
+    
+  };
+
   const formatDate = (day: string, month: string, year: string) => {
     var dayConvert = day.length === 2 ? day : `0${day}`;
     var monthConvert = month.length == 2 ? month : `0${month}`;
@@ -181,7 +233,7 @@ export default function HomeScreen() {
       )}
       <View className=" justify-center items-center space-y-4 mt-40">
         <Text className=" text-3xl text-white text-center">Date: {formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())}</Text>
-        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted} />
+        <TimerControl isTimerOn={isTimerOn} currentSkillSeconds={currentSkillSeconds} dropdownMenuIsInteracted={dropdownMenuIsInteracted} handleIsTimerRunning={handleIsTimerRunning} />
       </View>
     </View>
   );

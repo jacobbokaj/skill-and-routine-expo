@@ -10,57 +10,52 @@ interface Props{
   isTimerOn: boolean;
   currentSkillSeconds: number;
   dropdownMenuIsInteracted: boolean;
+  handleIsTimerRunning: (isTimerRunning: boolean, time: number) => void;
 }
 
 
-export default function TimerControl({isTimerOn, currentSkillSeconds, dropdownMenuIsInteracted} : Props) {
+export default function TimerControl({isTimerOn, currentSkillSeconds, dropdownMenuIsInteracted, handleIsTimerRunning} : Props) {
   
   const styles = `bg-blue-500 text-white`;
   const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+  const [isTimerRunning, setisTimerRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-
-  function doRun(isRun: boolean){
-    setIsRunning(isRun);
-    async () => {
-          const result = await setItem('timer', seconds);
-         // const data = await result;
-    
-    }
-  }
-
 
 
   useEffect(()=> {
     if(isTimerOn == false){
-      setIsRunning(false);
+      setisTimerRunning(false);
       if (intervalRef.current) clearInterval(intervalRef.current);
     }
+
     setSeconds(currentSkillSeconds);
   },[isTimerOn,dropdownMenuIsInteracted]);
-
   
-
-
+  
+  
+  
   useEffect(() => {
-    if (isRunning && !intervalRef.current) {
+    if (isTimerRunning && !intervalRef.current) {
       intervalRef.current = setInterval(() => {
         setSeconds(prev => prev + 1);
       }, 1000);
     }
-  
+
+    if(isTimerRunning === false){
+      handleIsTimerRunning(isTimerRunning, seconds);
+    }
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [isRunning]);
+  }, [isTimerRunning]);
 
   const handleReset = () => {
     setSeconds(0);
-    setIsRunning(false);
+    setisTimerRunning(false);
     if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
@@ -99,9 +94,9 @@ export default function TimerControl({isTimerOn, currentSkillSeconds, dropdownMe
         
         <Text className="text-3xl text-white">{formatTime(seconds)}</Text>
       <TouchableOpacity      
-        onPress={() => setIsRunning(prev => !prev)}
+        onPress={() => setisTimerRunning(prev => !prev)}
       >   
-        <Text className="text-3xl text-white">{isRunning ? 'Pause' : 'Play'}</Text>     
+        <Text className="text-3xl text-white">{isTimerRunning ? 'Pause' : 'Play'}</Text>     
       </TouchableOpacity>
 
       <TouchableOpacity
