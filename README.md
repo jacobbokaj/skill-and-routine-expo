@@ -1,4 +1,3 @@
-# Welcome to your Expo app 👋
 # 🧠 Skill & Routine Tracker 
 # (This project is in development, so this README.md file is not done)
 
