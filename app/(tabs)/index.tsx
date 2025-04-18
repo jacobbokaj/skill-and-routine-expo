@@ -159,7 +159,7 @@ export default function HomeScreen() {
       skillDateProgress.time = time;    
     }
 
-
+    console.log("Pausing");
     // Create to whenever the timer is paused it will save the data in the asyncStorage
     // If the date does not exists in the current data time info array it will push a new timeInfo and save.
     if (isTimerRunning == false && chosenSkill?.data !== undefined && skillDateProgress?.date !== undefined && skillDateProgress.time !== undefined) {
