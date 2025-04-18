@@ -28,7 +28,7 @@ export default function HomeScreen() {
   const [currentSkillSeconds, setCurrentSkillSeconds] = useState(0);
   const [isTimerOn, setIsTimerOn] = useState(true);
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
-  const [skillDateProgress, setSkillDateProgess] = useState<{ date: string; time: number }>();
+  const [skillDateProgress, setSkillDateProgress] = useState<{ date: string; time: number }>();
   const [isLoading, setIsLoading] = useState(true);
 
   // Not the best way but it works. I switch the boolean value true/false to make a call in TimerControl component.
@@ -87,7 +87,7 @@ export default function HomeScreen() {
       await setAsyncSkillData(exampleSkillData.data.name,exampleSkillData)
     };
 
-    fetchPlac();
+   // fetchPlac();
 
 
 
@@ -139,12 +139,19 @@ export default function HomeScreen() {
     var targetSkillDateProgress = null;
     if (foundSkillData !== null) {
 
+
+      var isDateFounded = false;
       for (let i = 0; i < foundSkillData?.data.TimeInfo.length; i++) {
 
         if (foundSkillData?.data.TimeInfo[i].date === formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())) {
           targetSkillDateProgress = foundSkillData?.data.TimeInfo[i];
-          setSkillDateProgess(foundSkillData?.data.TimeInfo[i]);
+          setSkillDateProgress(foundSkillData?.data.TimeInfo[i]);
+          isDateFounded = true;
         }
+      }
+
+      if (isDateFounded === false) {
+        setSkillDateProgress({date: formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString()), time: 0});
       }
     }
 
