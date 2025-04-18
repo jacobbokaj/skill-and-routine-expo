@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
+import SkillChosen from '@/components/SkillChosen';
 
 
 export default function Profile() {
@@ -27,6 +28,20 @@ export default function Profile() {
       fetchData();  // Call the async function
     }, []);
 
+    const skillNames = [
+      'Training',
+      'Instrument',
+      'Draw',
+      'Yoga',
+      'Meditation',
+      'Language',
+      'Garden',
+      'Make Games',
+    ];
+
+    const handleSkillChosen = (skillName: string) => {
+      
+    }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -38,6 +53,7 @@ export default function Profile() {
           style={styles.headerImage}
         />
       }>
+        <SkillChosen skillNames={skillNames} chosenSkill={handleSkillChosen}/>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
       </ThemedView>
