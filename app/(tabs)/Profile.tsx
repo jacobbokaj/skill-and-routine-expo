@@ -13,20 +13,35 @@ import SkillChosen from '@/components/SkillChosen';
 import SkillData from '../interfaces-ts/SkillData';
 import SkillNamesData from '../interfaces-ts/SkillNamesData';
 import { getAsyncSkillData } from '../utils/AsyncStorageSkillData';
-import { getAsyncSkillNamesData } from '../utils/AsyncStorageSkillNamesData';
+import { getAsyncSkillNamesData, setAsyncSkillNamesData } from '../utils/AsyncStorageSkillNamesData';
 
 export default function Profile() {
   const [skillsData, setSkillsData] = useState<SkillData[]>([]);
-    const [skillNamesData, setSkillNamesData] = useState<SkillNamesData>({
-      data: {
-        skillNames: []
-      }
-    });
+  const [skillNamesData, setSkillNamesData] = useState<SkillNamesData>({
+    data: {
+      skillNames: []
+    }
+  });
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [isLoading, setIsLoading] = useState(true);
-
-
-
+  
+  
+  const exampleSkillData: SkillData = {
+    data: {
+      name: "Yoga",
+      totalTime: 120,
+      streak: 10,
+      TimeInfo: [
+        { date: "01-03-2025", time: 30 },
+        { date: "02-03-2025", time: 20 },
+        { date: "03-03-2025", time: 25 },
+        { date: "04-03-2025", time: 15 },
+        { date: "05-03-2025", time: 30 },
+        { date: "15-04-2025", time: 45 },
+        { date: "16-04-2025", time: 42 },
+      ]
+    }
+  };
 
  const [data, setData] = useState(null);
   useEffect(() => {
@@ -49,6 +64,16 @@ export default function Profile() {
     
         //Going to this webpage.
         React.useCallback(() => {
+          setIsLoading(true);
+
+          const pushSkillNamesData = async () => {
+              skillNamesData.data.skillNames.push(exampleSkillData.data.name);
+              await setAsyncSkillNamesData('skillNamesData',skillNamesData);
+
+
+          }
+
+          pushSkillNamesData();
 
           const fetchSkillNamesData = async () => {
             const result = await getAsyncSkillNamesData('skillNamesData');
@@ -59,7 +84,7 @@ export default function Profile() {
             setIsLoading(false);
           };
           
-
+          fetchSkillNamesData();
           //Leaving this webpage.
           return () => {
             
@@ -68,16 +93,6 @@ export default function Profile() {
       );
     
 
-    const skillNames = [
-      'Training',
-      'Instrument',
-      'Draw',
-      'Yoga',
-      'Meditation',
-      'Language',
-      'Garden',
-      'Make Games',
-    ];
 
     const handleSkillChosen = (skillName: string) => {
       
@@ -95,9 +110,14 @@ export default function Profile() {
         <Text className="text-3xl text-white text-center px-5"> Profile</Text>
       </View>
 
-      <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
-        <SkillChosen skillNames={skillNames} chosenSkill={handleSkillChosen}/>
-      </View>
+      {isLoading ? (
+        <Text className="text-white text-center mt-10">Loading...</Text>
+      ) : (
+        <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
+          <SkillChosen skillNames={skillNamesData.data.skillNames} chosenSkill={handleSkillChosen} />
+        </View>
+      )}
+
       <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
 
     </View>

@@ -79,7 +79,7 @@ export default function HomeScreen() {
       await setAsyncSkillNamesData('SkillNamesData', skillNamesData);
 
     };
-    fetchSki();
+   // fetchSki();
 
     // PLACE HOLDER CODE-------------------------------------------------------------------------------------------------------------
     const fetchPlac = async () => {
