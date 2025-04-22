@@ -12,7 +12,7 @@ import React from 'react';
 import SkillChosen from '@/components/SkillChosen';
 import SkillData from '../interfaces-ts/SkillData';
 import SkillNamesData from '../interfaces-ts/SkillNamesData';
-import { getAsyncSkillData } from '../utils/AsyncStorageSkillData';
+import { getAsyncSkillData, setAsyncSkillData } from '../utils/AsyncStorageSkillData';
 import { getAsyncSkillNamesData, setAsyncSkillNamesData } from '../utils/AsyncStorageSkillNamesData';
 
 export default function Profile() {
@@ -22,10 +22,13 @@ export default function Profile() {
       skillNames: []
     }
   });
+
+
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [isLoading, setIsLoading] = useState(true);
-  
-  
+  const [todayTime, setTodayTime] = useState(0);
+  var today = new Date();
+
   const exampleSkillData: SkillData = {
     data: {
       name: "Yoga",
@@ -43,68 +46,106 @@ export default function Profile() {
     }
   };
 
- const [data, setData] = useState(null);
-  useEffect(() => {
-    
-      // Asynchronous function inside useEffect
-      const fetchData = async () => {
-        const result = await getItem('username');
-  
-        const data = await result;
-  
-        console.log("from profile data: " + data);
-        setData(data);  // Set state with the fetched data
+
+  useFocusEffect(
+
+    //Going to this webpage.
+    React.useCallback(() => {
+      setIsLoading(true);
+
+      const pushSkillNamesData = async () => {
+        skillNamesData.data.skillNames.push(exampleSkillData.data.name);
+        await setAsyncSkillNamesData('skillNamesData', skillNamesData);
+
+
+      }
+
+      pushSkillNamesData();
+
+      const fetchSkillNamesData = async () => {
+        const result = await getAsyncSkillNamesData('skillNamesData');
+
+        if (result != undefined) {
+          setSkillNamesData(result);
+        }
+        setIsLoading(false);
       };
-      
-      fetchData();  // Call the async function
-    }, []);
+
+      fetchSkillNamesData();
 
 
-    useFocusEffect(
-    
-        //Going to this webpage.
-        React.useCallback(() => {
-          setIsLoading(true);
+      const pushSkillsData = async () => {
+        await setAsyncSkillData('skillData', exampleSkillData);
+      };
 
-          const pushSkillNamesData = async () => {
-              skillNamesData.data.skillNames.push(exampleSkillData.data.name);
-              await setAsyncSkillNamesData('skillNamesData',skillNamesData);
+      pushSkillsData();
 
+      const fetchSkillsData = async () => {
+        const promises = skillNamesData.data.skillNames.map(name => getAsyncSkillData(name));
+        const results = await Promise.all(promises);
 
-          }
+        const validResults = results.filter(
+          (result): result is SkillData =>
+            result !== null && !skillsData.some(skill => skill.data.name === result.data.name)
+        );
+        setSkillsData(validResults);
+      };
 
-          pushSkillNamesData();
-
-          const fetchSkillNamesData = async () => {
-            const result = await getAsyncSkillNamesData('skillNamesData');
-
-            if (result != undefined) {
-              setSkillNamesData(result);
-            }
-            setIsLoading(false);
-          };
-          
-          fetchSkillNamesData();
-          //Leaving this webpage.
-          return () => {
-            
-          };
-        }, [])
-      );
-    
+      fetchSkillsData();
 
 
-    const handleSkillChosen = (skillName: string) => {
-      
+
+      //Leaving this webpage.
+      return () => {
+
+      };
+    }, [])
+  );
+
+
+  const formatDate = (day: string, month: string, year: string) => {
+    var dayConvert = day.length === 2 ? day : `0${day}`;
+    var monthConvert = month.length == 2 ? month : `0${month}`;
+    return `${dayConvert}-${monthConvert}-${year}`;
+  };
+
+
+  const findTodayTime = (chosenSkill: SkillData) => {
+    var time = 0;
+    const todayDate = formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString());
+    for (let i = 0; i < chosenSkill.data.TimeInfo.length; i++) {
+
+        if (todayDate === chosenSkill.data.TimeInfo[i].date) {
+          time =chosenSkill.data.TimeInfo[i].time;
+        }
     }
+    return time;
+  }
+
+  const handleSkillChosen = (skillName: string) => {
+
+    for (let i = 0; i < skillsData.length; i++) {
+
+      if (skillName === skillsData[i].data.name) {
+        setChosenSkill(skillsData[i]);
+        break;
+      }
+    }
+
+    if (chosenSkill !== undefined) {     
+     setTodayTime(findTodayTime(chosenSkill));
+    }
+  }
+
+
   return (
     <View>
-      
+
       <Image
-              source={require('@/assets/bg/background.png')}
-              className="absolute w-full h-full z-0 self-center"
-      
-              resizeMode="cover"
+        source={require('@/assets/bg/background.png')}
+        className="absolute w-full h-full z-0 self-center"
+
+        resizeMode="cover"
       />
       <View className="mt-20">
         <Text className="text-3xl text-white text-center px-5"> Profile</Text>
@@ -118,10 +159,16 @@ export default function Profile() {
         </View>
       )}
 
-      <Text className=" text-3xl text-blue-500 text-center">DATA: {data}</Text>
-
+      {chosenSkill ? (
+        <View>
+          <Text className="text-white text-center mt-10">{formatDate(today.getDate().toString(),(today.getMonth() + 1).toString(),today.getFullYear().toString())} time: {todayTime} </Text>
+          <Text className="text-white text-center mt-10">Total time : {chosenSkill?.data.totalTime} </Text>
+        </View>
+      ) : (
+        <Text></Text>
+      )}
     </View>
-   
+
   );
 }
 
