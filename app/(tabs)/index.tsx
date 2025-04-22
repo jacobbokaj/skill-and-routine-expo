@@ -7,9 +7,9 @@ import { ThemedView } from '@/components/ThemedView';
 import TimerControl from '@/components/TimerControl';
 import SkillChosen from '@/components/SkillChosen';
 import SkillData from '../interfaces-ts/SkillData';
-import SkillsAddedData from '../interfaces-ts/SkillsAddedData';
+import SkillNamesData from '../interfaces-ts/SkillNamesData';
 import { getItem, setItem } from '@/app/utils/AsyncStorage';
-import { getAsyncSkillsAddedData, setAsyncSkillsAddedData } from '../utils/AsyncStorageSkillsAddedData';
+import { getAsyncSkillNamesData, setAsyncSkillNamesData } from '../utils/AsyncStorageSkillNamesData';
 import { getAsyncSkillData, setAsyncSkillData } from '../utils/AsyncStorageSkillData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
@@ -20,7 +20,7 @@ import { isLoading } from 'expo-font';
 export default function HomeScreen() {
 
   const [skillsData, setSkillsData] = useState<SkillData[]>([]);
-  const [skillsAddedData, setSkillsAddedData] = useState<SkillsAddedData>({
+  const [skillNamesData, setSkillNamesData] = useState<SkillNamesData>({
     data: {
       skillNames: []
     }
@@ -73,10 +73,10 @@ export default function HomeScreen() {
     const fetchSki = async () => {
 
 
-      skillsAddedData?.data.skillNames.push(exampleSkillData.data.name);
+      skillNamesData?.data.skillNames.push(exampleSkillData.data.name);
 
 
-      await setAsyncSkillsAddedData('SkillsAddedData', skillsAddedData);
+      await setAsyncSkillNamesData('SkillNamesData', skillNamesData);
 
     };
     fetchSki();
@@ -92,22 +92,22 @@ export default function HomeScreen() {
 
 
 
-    const fetchSkillsAddedData = async () => {
+    const fetchSkillNamesData = async () => {
 
-      const result = await getAsyncSkillsAddedData('SkillsAddedData');
+      const result = await getAsyncSkillNamesData('SkillNamesData');
 
       if (result != undefined) {
 
-        setSkillsAddedData(result);
+        setSkillNamesData(result);
       }
       setIsLoading(false)
     };
 
 
-    fetchSkillsAddedData();
+    fetchSkillNamesData();
 
     const fetchAll = async () => {
-      const promises = skillsAddedData.data.skillNames.map(name => getAsyncSkillData(name));
+      const promises = skillNamesData.data.skillNames.map(name => getAsyncSkillData(name));
       const results = await Promise.all(promises);
 
       const validResults = results.filter(
@@ -235,7 +235,7 @@ export default function HomeScreen() {
         <Text className="text-white text-center mt-10">Loading...</Text>
       ) : (
         <View className="justify-center items-center space-y-4 mt-10 bg-slate-200">
-          <SkillChosen skillNames={skillsAddedData.data.skillNames} chosenSkill={handleSkillChosen} />
+          <SkillChosen skillNames={skillNamesData.data.skillNames} chosenSkill={handleSkillChosen} />
         </View>
       )}
       <View className=" justify-center items-center space-y-4 mt-40">

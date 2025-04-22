@@ -10,10 +10,24 @@ import { getItem, setItem } from '@/app/utils/AsyncStorage';
 import { useFocusEffect } from 'expo-router';
 import React from 'react';
 import SkillChosen from '@/components/SkillChosen';
-
+import SkillData from '../interfaces-ts/SkillData';
+import SkillNamesData from '../interfaces-ts/SkillNamesData';
+import { getAsyncSkillData } from '../utils/AsyncStorageSkillData';
+import { getAsyncSkillNamesData } from '../utils/AsyncStorageSkillNamesData';
 
 export default function Profile() {
-  
+  const [skillsData, setSkillsData] = useState<SkillData[]>([]);
+    const [skillNamesData, setSkillNamesData] = useState<SkillNamesData>({
+      data: {
+        skillNames: []
+      }
+    });
+  const [chosenSkill, setChosenSkill] = useState<SkillData>();
+  const [isLoading, setIsLoading] = useState(true);
+
+
+
+
  const [data, setData] = useState(null);
   useEffect(() => {
     
@@ -35,7 +49,17 @@ export default function Profile() {
     
         //Going to this webpage.
         React.useCallback(() => {
+
+          const fetchSkillNamesData = async () => {
+            const result = await getAsyncSkillNamesData('skillNamesData');
+
+            if (result != undefined) {
+              setSkillNamesData(result);
+            }
+            setIsLoading(false);
+          };
           
+
           //Leaving this webpage.
           return () => {
             

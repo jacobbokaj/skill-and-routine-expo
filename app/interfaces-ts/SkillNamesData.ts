@@ -1,4 +1,4 @@
-export default interface SkillsAddedData {
+export default interface SkillNamesData {
     data: {
         skillNames: string[]
     }
