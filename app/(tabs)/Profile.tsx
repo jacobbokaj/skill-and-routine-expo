@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, Text, View } from 'react-native';
+import { StyleSheet, Image, Platform, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -27,6 +27,7 @@ export default function Profile() {
   const [chosenSkill, setChosenSkill] = useState<SkillData>();
   const [isLoading, setIsLoading] = useState(true);
   const [todayTime, setTodayTime] = useState(0);
+  const [newSkill,setNewSkill] = useState<string>('');
   var today = new Date();
 
   const exampleSkillData: SkillData = {
@@ -138,6 +139,10 @@ export default function Profile() {
   }
 
 
+  const handleAddSkill = (skill: string) => {
+
+  }
+
   return (
     <View>
 
@@ -167,10 +172,34 @@ export default function Profile() {
       ) : (
         <Text></Text>
       )}
-    </View>
 
+      <TextInput 
+        style={textStyles.input}
+      placeholder='Textw'/>
+
+
+      <TouchableOpacity
+              onPress={() => handleAddSkill(newSkill)}
+            >
+                <Text className="text-3xl text-white">Reset day</Text>
+            </TouchableOpacity>
+
+    </View>
+    
   );
 }
+
+const textStyles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+});
+
+
+
 
 const styles = StyleSheet.create({
   headerImage: {
